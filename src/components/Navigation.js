@@ -1,14 +1,26 @@
 import React, {Component} from 'react';
 
 class Navigation extends Component {
-  state = {}
   render() {
+    let _list        = this.props.lists;
+    let list_content = [];
+
+    for(let i = 0; i < _list.length; i++) {
+      list_content.push(
+        <li key={_list[i].id}>
+          <a  href={"/content/" + _list[i].id} onClick={(e) => {
+            e.preventDefault();
+
+            this.props.onClickPage(_list[i].id);
+          }}>{_list[i].title}</a>
+        </li>
+      );
+    }
+
     return (
       <nav>
         <ul>
-          <li><a href="/">HTML</a></li>
-          <li><a href="/">CSS</a></li>
-          <li><a href="/">JavaScript</a></li>
+          {list_content}
         </ul>
       </nav>
     );

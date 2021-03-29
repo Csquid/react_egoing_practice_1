@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 
 class Header extends Component {
-  state = {}
   render() {
     return (
-      <h1>Welcome</h1>
+      <header>
+        <h1>{this.props.title}</h1>
+        <p>{this.props.description}</p>
+      </header>
     );
   }
 }

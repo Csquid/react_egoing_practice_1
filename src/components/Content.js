@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 
 class Content extends Component {
-  state = {}
+
   render() {
     return (
       <div>
-        <h2>HTML</h2>
-        <p>HTML is for information</p>
+        <h2>{this.props.title}</h2>
+        <p>{this.props.description}</p>
       </div>
     );
   }
