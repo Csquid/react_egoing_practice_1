@@ -7,9 +7,12 @@ import Content from './components/Content';
 class App extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
+      mode: 'welcome',
+      modeEve: null,
       listNowIDX: 0,
+      listLastIDX: 0,
       welcome: { title: 'Welcome', description: 'Welcome React World' },
       nav_lists: [
         { id: 0, title: 'HTML',       description: 'HTML is HyperText Markup Language' },
@@ -26,23 +29,29 @@ class App extends Component {
         }
       }
     }
-
-    let _welcome = this.state.welcome;
-    let _nav_lists = this.state.nav_lists;
-    let _now_list = getList();
-    let _title = _now_list.title;
-    let _description = _now_list.description;
-
+    
+    let _welcome      = this.state.welcome;
+    let _nav_lists    = this.state.nav_lists;
+    let _now_list     = getList();
+    let _title        = _now_list.title;
+    let _description  = _now_list.description;
+    let _article      = null;
 
     return ( 
       <div className="App">
         <Header title={_welcome.title} description={_welcome.description}></Header>
         <Navigation lists={_nav_lists} onClickPage={(idx)=> {
           this.setState({
+            mode: 'read',
+            modeEve: 'read',
             listNowIDX: Number(idx)
           })
         }}></Navigation>
-        <Controll></Controll>
+        <Controll onChangePage={(nMode) => {
+          this.setState({
+            mode: nMode
+          })
+        }}></Controll>
         <Content title={_title} description={_description}></Content>
       </div>
     );
