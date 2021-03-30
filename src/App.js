@@ -26,17 +26,20 @@ class App extends Component {
     }
   }
   render() { 
-    const getList = () => {
+    const getList = (type) => {
       for(let i = 0; i < _nav_lists.length; i++) {
         if(this.state.listNowIDX === _nav_lists[i].id) {
-          return _nav_lists[i];
+          if(type === 'list')
+            return _nav_lists[i];
+          else if(type === 'idx')
+            return i;
         }
       }
     }
     
     let _welcome      = this.state.welcome;
     let _nav_lists    = this.state.nav_lists;
-    let _now_list     = getList();
+    let _now_list     = getList('list');
     let _title        = _now_list.title;
     let _description  = _now_list.description;
     let _article      = null;
@@ -47,7 +50,7 @@ class App extends Component {
         break;
       case 'create':
         _article = <CreateContent onCreatePage={(nTitle, nDescription) => {
-          let temp_lists = Array.from(this.state.nav_lists);
+          let temp_lists = Array.from(_nav_lists);
           let _listLastIDX = this.state.listLastIDX + 1;
 
           temp_lists.push({
@@ -58,7 +61,7 @@ class App extends Component {
           
           this.setState({
             nav_lists: temp_lists,
-            mode: 'read',
+            mode:    'read',
             modeEve: 'read',
             listLastIDX: _listLastIDX,
             listNowIDX: _listLastIDX
@@ -67,7 +70,27 @@ class App extends Component {
         break;
 
       case 'update':
-        
+        let _listNowIDX = this.state.listNowIDX;
+
+        _article = 
+          <UpdateContent 
+            title={_title} 
+            description={_description} 
+            onUpdatePage={(_title, _description)=> {
+              let temp_lists = Array.from(_nav_lists);
+              temp_lists[_listNowIDX] = {
+                id: _listNowIDX, 
+                title: _title,
+                description: _description
+              }
+
+              this.setState({
+                nav_lists: temp_lists,
+                mode: 'read'
+              })
+            }}
+          >
+          </UpdateContent>
         break;
       case 'delete':
         // 여기서는 delete를 처리하지 않는다.
@@ -87,6 +110,10 @@ class App extends Component {
           })
         }}></Navigation>
         <Controll onChangePage={(nMode) => {
+          if(nMode === 'delete') {
+            let temp_lists = Array.from(this.state.nav_lists);
+            
+          }
           this.setState({
             mode: nMode,
             modeEve: nMode
