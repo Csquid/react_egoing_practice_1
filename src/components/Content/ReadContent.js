@@ -4,10 +4,10 @@ class ReadContent extends Component {
 
   render() {
     return (
-      <div>
+      <article>
         <h2>{this.props.title}</h2>
         <p>{this.props.description}</p>
-      </div>
+      </article>
     );
   }
 }
