@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import Controll from './components/Controll';
-// import Content from './components/Content';
 import ReadContent from './components/Content/ReadContent';
 import CreateContent from './components/Content/CreateContent';
 import UpdateContent from './components/Content/UpdateContent';
@@ -35,16 +34,35 @@ class App extends Component {
             return i;
         }
       }
+
+      return null;
     }
+    
     
     let _welcome      = this.state.welcome;
     let _nav_lists    = this.state.nav_lists;
     let _now_list     = getList('list');
-    let _title        = _now_list.title;
-    let _description  = _now_list.description;
+    let _now_mode     = this.state.mode;
+    let _now_idx      = getList('idx');
+    let _title        = null;
+    let _description  = null;
     let _article      = null;
+    
+    /*
+     *
+     *  delete를 한 직후 this.state.mode는 'welcome' 상태이다.
+     *  그렇기에 && And 가 아닌 || OR 연산자로 해버리면 
+     *  첫번째 조건 검사에서 true가 되어 중괄호 내로 들어가게 된다.
+     *  그래서 delete 후에 create를 하게되면 [TypeError: Cannot read property 'title' of null] 라는 에러를 뿜게된다.
+     * 
+    */
+   
+    if(_now_mode !== 'welcome' && _now_list !== null) {
+      _title       = _now_list.title;
+      _description = _now_list.description;
+    }
 
-    switch (this.state.mode) {
+    switch (_now_mode) {
       case 'read':
         _article = <ReadContent title={_title} description={_description}></ReadContent>
         break;
@@ -111,8 +129,30 @@ class App extends Component {
         }}></Navigation>
         <Controll onChangePage={(nMode) => {
           if(nMode === 'delete') {
-            let temp_lists = Array.from(this.state.nav_lists);
+            if(this.state.modeEve !== 'read') {
+              alert('read 페이지가 아닙니다.');
+              return;
+            }
+            if (!window.confirm('Do you really want to erase  [' + _now_list.title + "]?")) {
+              return;
+            }
+            if(this.state.nav_lists.length <= 0) {
+              return;
+            }
+
+            let temp_lists = Array.from(_nav_lists);
+            let remove = temp_lists.splice(_now_idx, 1);
+
+            console.log(temp_lists);
+            console.log(remove);
             
+            this.setState({
+              nav_lists: temp_lists,
+              mode: 'welcome',
+              modeEve: nMode
+            });
+
+            return;
           }
           this.setState({
             mode: nMode,
